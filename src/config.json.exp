@@ -1,14 +1,14 @@
 {
   "names":
   [
-    {"name": "yjs", "username": "13689179415", "password": "aabbcc", "callPhone": "13689179415","isSchool": false , "location": ["108.90548","34.156167"], "havelocation": true,"address":  "陕西省宝鸡市岐山县凤鸣花园老区"},
-    {"name": "dyk", "username": "19992718542", "password": "ccbbaa", "callPhone": "19992718542","isSchool": true}
+    {"name": "yjs", "username": "xx", "password": "xx", "callPhone": "xx" , "location": ["108.90548","34.156167"], "havelocation": false,"address":  "陕西省宝鸡市岐山县凤鸣花园老区"},
+    {"name": "dyk", "username": "xx", "password": "xx", "callPhone": "xx", "location": ["",""], "havelocation": false,"address":  "陕西省西安市长安区韦曲街道西安邮电大学长安校区西区"}
 
 
 
   ],
-  "accessKeyId": "LTAI4GEJ2YHbQyAtbPDGTjqe",
-  "accessKeySecret": "WtVUrot4RG7vuQl3uU13TCDWZAaRik",
-  "GDKey":"dac00dbecfd1ce57bfaa36c645d65ce4"
+  "accessKeyId": "xx",
+  "accessKeySecret": "xx",
+  "GDKey":"xx"
 
 }
