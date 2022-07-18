@@ -369,19 +369,6 @@ public:
         string answers = "[\"0\",\"1\",\"" + c_number[u(e)] + "\"]";
         string timestampHeader = to_string(getCurrentLocalTimeStamp());
 
-
-        /*
-         *  'Accept-Encoding': 'gzip,compress,br,deflate',
-            'Connection': 'keep-alive',
-            'Content-Length': '478',
-            'Cookie': '',
-            'Host': 'student.wozaixiaoyuan.com',
-            'JWSESSION': '8e69e0003fd641ddb5b545459deb3416',
-            'Referer': 'https://servicewechat.com/wxce6d08f781975d91/186/page-frame.html',
-            'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 15_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.20(0x18001431) NetType/WIFI Language/zh_CN',
-            'content-type': 'application/x-www-form-urlencoded',
-            'token': ''
-         * */
         cpr::Response response = cpr::Post(cpr::Url{"https://student.wozaixiaoyuan.com/health/save.json"},
                                            cpr::Header{
                                                    {"Accept-Encoding", "gzip,compress,br,deflate"},
