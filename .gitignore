@@ -45,6 +45,7 @@ gen
 .idea/
 cmake-build-debug
 build
+test/
 
 *.json
 

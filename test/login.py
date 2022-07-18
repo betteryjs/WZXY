@@ -5,8 +5,8 @@ import requests
 
 class WZXYDK(object):
     def __init__(self):
-        self.username= "19992718542"
-        self.password=  "ccbbaa"
+        self.username= "xx"
+        self.password=  "xx"
         self.url = "https://gw.wozaixiaoyuan.com/basicinfo/mobile/login/username?username={}&password={}".format(self.username,self.password)
         self.headers = {
         "Accept-Encoding": "gzip, deflate, br",

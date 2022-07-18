@@ -10,8 +10,6 @@ target_link_libraries(go_wzxy cpr alibabacloud-sdk-core glog::glog)
 
 
 
-add_executable(go_wzxy2 go_wzxy2.cpp )
-target_link_libraries(go_wzxy2 cpr alibabacloud-sdk-core glog::glog)
 
 
 
@@ -19,9 +17,7 @@ target_link_libraries(go_wzxy2 cpr alibabacloud-sdk-core glog::glog)
 install(DIRECTORY cookie_json DESTINATION ${PROJECT_SOURCE_DIR}/build/bin )
 install(PROGRAMS wzxy.sh DESTINATION ${PROJECT_SOURCE_DIR}/build/bin  )
 install(FILES config.json DESTINATION ${PROJECT_SOURCE_DIR}/build/bin PERMISSIONS OWNER_READ )
-install(FILES config2.json DESTINATION ${PROJECT_SOURCE_DIR}/build/bin PERMISSIONS OWNER_READ )
 
 
 
 
-#add_executable(test test.cpp )

@@ -1,7 +1,7 @@
 import time
 
 import requests
-
+GDKey="f247cdb592eb43ebac6ccd27f796e2d2"
 
 class WZXYDK(object):
     def __init__(self):
@@ -65,7 +65,7 @@ class WZXYDK(object):
 
     def get_post_data(self):
         latitude_longitude=[34.156167,108.90548] # 维度 经度
-        url= "https://restapi.amap.com/v3/geocode/regeo?output=JSON&location={},{}&key=dac00dbecfd1ce57bfaa36c645d65ce4&radius=1000&extensions=all".format(latitude_longitude[1],latitude_longitude[0])
+        url= "https://restapi.amap.com/v3/geocode/regeo?output=JSON&location={},{}&key={}&radius=1000&extensions=all".format(latitude_longitude[1],latitude_longitude[0],GDKey)
         map_reesponse=requests.get(url).json()
         status=map_reesponse["status"] # 1
         latitude=latitude_longitude[0]
