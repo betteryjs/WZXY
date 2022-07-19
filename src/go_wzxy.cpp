@@ -295,16 +295,11 @@ public:
 
 
     void start() {
-
-
         this->login();
         this->dk();
         if (isSMS) {
-
             this->send_sms();
         }
-
-
     }
 
     int login() {
@@ -321,12 +316,7 @@ public:
             this->JWSESSION = response.cookies["JWSESSION"];
 
             if (!this->JWSESSION.empty()) {
-                LOG(INFO) << this->JWSESSION;
-                ofstream session("cookie_json/" + name + ".json");
-                json session_json;
-                session_json["JWSESSION"] = this->JWSESSION;
-                session << session_json;
-
+                LOG(INFO) << " JWSESSION is " << this->JWSESSION;
                 return 0;
             } else {
                 LOG(INFO) << response.text;
@@ -466,7 +456,7 @@ int main(int argc, char *argv[]) {
     string accessKeyId = people_json["accessKeyId"].get<string>();
     string accessKeySecret = people_json["accessKeySecret"].get<string>();
     string GDKey = people_json["GDKey"].get<string>();
-    bool isSMS = false;
+    bool isSMS = true;
 
     for (int i = 0; i < people_json["names"].size(); ++i) {
         WZXY wzxy(people_json["names"][i], accessKeyId, accessKeySecret, isSMS, GDKey);
