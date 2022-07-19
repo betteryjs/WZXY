@@ -85,37 +85,43 @@ public:
 };
 
 
-
-namespace do_string{
+namespace do_string {
     using namespace std;
     static const std::string WHITE_SPACE = " \n\r\t\f\v";
+
     /////
     std::string ltrim(const std::string &);
+
     std::string rtrim(const std::string &);
+
     std::string trim(const std::string &);
-    std::vector<std::string> split(const std::string& ,const std::string& );
-    std::vector<std::string> split(const std::string& ,const std::string& ,bool );
+
+    std::vector<std::string> split(const std::string &, const std::string &);
+
+    std::vector<std::string> split(const std::string &, const std::string &, bool);
+
     /////
-    std::string ltrim(const std::string &s)
-    {
+    std::string ltrim(const std::string &s) {
         size_t start = s.find_first_not_of(WHITE_SPACE);
         return (start == std::string::npos) ? "" : s.substr(start);
     }
-    std::string rtrim(const std::string &s)
-    {
+
+    std::string rtrim(const std::string &s) {
         size_t end = s.find_last_not_of(WHITE_SPACE);
         return (end == std::string::npos) ? "" : s.substr(0, end + 1);
     }
+
     std::string trim(const std::string &s) {
         return rtrim(ltrim(s));
     }
-    std::vector<std::string> split(const std::string& str,const std::string& delim) {
-        return split(str,delim,false);
+
+    std::vector<std::string> split(const std::string &str, const std::string &delim) {
+        return split(str, delim, false);
     }
 
-    std::vector<std::string> split(const std::string& str,const std::string& delim,bool is_trim) {
+    std::vector<std::string> split(const std::string &str, const std::string &delim, bool is_trim) {
         std::vector<string> res;
-        if (str.empty()){
+        if (str.empty()) {
             return res;
         }
         std::string string1 = str + delim; //*****扩展字符串以方便检索最后一个分隔出的字符串
@@ -125,9 +131,9 @@ namespace do_string{
             pos = string1.find(delim, i); //pos为分隔符第一次出现的位置，从i到pos之前的字符串是分隔出来的字符串
             if (pos != string::npos) { //如果查找到，如果没有查找到分隔符，pos为string::npos
                 string s = string1.substr(i, pos - i);//*****从i开始长度为pos-i的子字符串
-                if(is_trim){
+                if (is_trim) {
                     res.push_back(trim(s));//两个连续空格之间切割出的字符串为空字符串，这里没有判断s是否为空，所以最后的结果中有空字符的输出，
-                }else{
+                } else {
                     res.push_back(s);//两个连续空格之间切割出的字符串为空字符串，这里没有判断s是否为空，所以最后的结果中有空字符的输出，
                 }
                 i = pos + delim.size() - 1;
@@ -150,36 +156,34 @@ private:
     }
 
 public:
-    WZXY(json & config,const string &accessKeyId, const string &accessKeySecret, const bool &isSMS, const string & GDKey) :
+    WZXY(json &config, const string &accessKeyId, const string &accessKeySecret, const bool &isSMS, const string &GDKey)
+            :
             configData(config), accessKeyId(accessKeyId),
             accessKeySecret(accessKeySecret), isSMS(isSMS), GDKey(GDKey) {
-         this->name=configData.at("name");
-         this->username=configData.at("username");
-         this->password=configData.at("password");
-         this->callPhone=configData.at("callPhone");
+        this->name = configData.at("name");
+        this->username = configData.at("username");
+        this->password = configData.at("password");
+        this->callPhone = configData.at("callPhone");
 
-         LOG(INFO) << "init " << name;
-         LOG(INFO) << configData << endl;
-
-
-
+        LOG(INFO) << "init " << name;
+        LOG(INFO) << configData << endl;
 
 
     };
 
 
-    cpr::Payload get_dk_data(){
+    cpr::Payload get_dk_data() {
 
 //        latitude_longitude=[34.156167,108.90548] # 维度 经度
-        vector <string> c_number{"36.4", "36.5", "36.6", "36.7"};
+        vector<string> c_number{"36.4", "36.5", "36.6", "36.7"};
         uniform_int_distribution<unsigned> u(0, c_number.size() - 1);
         default_random_engine e;
 
         string answers = "[\"0\",\"1\",\"" + c_number[u(e)] + "\"]";
-        string  longitude{};
-        string  latitude{};
+        string longitude{};
+        string latitude{};
 
-        string country=  "中国";
+        string country = "中国";
 
         string city{};
         string district{};
@@ -191,59 +195,60 @@ public:
         string citycode{};
 
 
-
-        if(this->configData.at("havelocation")){
-              longitude=this->configData.at("location")[0];
-              latitude=this->configData.at("location")[1];
-        }
-        else{
+        if (this->configData.at("havelocation")) {
+            longitude = this->configData.at("location")[0];
+            latitude = this->configData.at("location")[1];
+        } else {
             // get longitude latitude
 
-            string address=this->configData.at("address");
-            cpr::Response response = cpr::Get(cpr::Url{"https://restapi.amap.com/v3/geocode/geo?address="+address+"&output=JSON&key="+this->GDKey});
-            if (response.status_code == 200){
+            string address = this->configData.at("address");
+            cpr::Response response = cpr::Get(cpr::Url{
+                    "https://restapi.amap.com/v3/geocode/geo?address=" + address + "&output=JSON&key=" + this->GDKey});
+            if (response.status_code == 200) {
 
                 LOG(INFO) << " Get location data Success , response.status_code is " << response.status_code;
 
-                json response_json=json::parse(response.text);
-                if(response_json.at("status")=="1"){
-                    if(response_json.at("geocodes").size()>0){
-                        string location=response_json.at("geocodes")[0].at("location").get<string>();
-                        vector<string> location_vector=do_string::split(location, ",");
-                         longitude=location_vector[0];
-                         latitude=location_vector[1];
-                        LOG(INFO) << " Get location data Success longitude is  "<< longitude ;
+                json response_json = json::parse(response.text);
+                if (response_json.at("status") == "1") {
+                    if (response_json.at("geocodes").size() > 0) {
+                        string location = response_json.at("geocodes")[0].at("location").get<string>();
+                        vector<string> location_vector = do_string::split(location, ",");
+                        longitude = location_vector[0];
+                        latitude = location_vector[1];
+                        LOG(INFO) << " Get location data Success longitude is  " << longitude;
                         LOG(INFO) << "latitude  is " << latitude;
 
                     }
 
 
-                }else{
-                    LOG(ERROR)<< " no location data ";
+                } else {
+                    LOG(ERROR) << " no location data ";
                 }
 
-            }else{
-                LOG(ERROR)<< " requests error response.status_code is  "<< response.status_code;
+            } else {
+                LOG(ERROR) << " requests error response.status_code is  " << response.status_code;
             }
         }
 
-        cpr::Response response = cpr::Get(cpr::Url{"https://restapi.amap.com/v3/geocode/regeo?output=JSON&location="+longitude+","+latitude+"&key="+this->GDKey+"&radius=1000&extensions=all"});
-        if (response.status_code == 200){
+        cpr::Response response = cpr::Get(cpr::Url{
+                "https://restapi.amap.com/v3/geocode/regeo?output=JSON&location=" + longitude + "," + latitude +
+                "&key=" + this->GDKey + "&radius=1000&extensions=all"});
+        if (response.status_code == 200) {
 
             LOG(INFO) << " Get map data Success , response.status_code is " << response.status_code;
 
-            json map_reesponse=json::parse(response.text);
-            if(map_reesponse.at("status")=="1"){
+            json map_reesponse = json::parse(response.text);
+            if (map_reesponse.at("status") == "1") {
 
-                city=map_reesponse["regeocode"]["addressComponent"].at("city").get<string>();
-                district=map_reesponse["regeocode"]["addressComponent"].at("district").get<string>();
-                province= map_reesponse["regeocode"]["addressComponent"].at("province").get<string>();
-                township=map_reesponse["regeocode"]["addressComponent"].at("township").get<string>();
-                towncode=map_reesponse["regeocode"]["addressComponent"].at("towncode").get<string>();
-                street=map_reesponse["regeocode"]["addressComponent"].at("streetNumber").at("street").get<string>();
-                areacode=map_reesponse["regeocode"]["addressComponent"].at("adcode").get<string>();
-                citycode=map_reesponse["regeocode"]["addressComponent"].at("citycode").get<string>();
-                formatted_address=map_reesponse["regeocode"].at("formatted_address").get<string>();
+                city = map_reesponse["regeocode"]["addressComponent"].at("city").get<string>();
+                district = map_reesponse["regeocode"]["addressComponent"].at("district").get<string>();
+                province = map_reesponse["regeocode"]["addressComponent"].at("province").get<string>();
+                township = map_reesponse["regeocode"]["addressComponent"].at("township").get<string>();
+                towncode = map_reesponse["regeocode"]["addressComponent"].at("towncode").get<string>();
+                street = map_reesponse["regeocode"]["addressComponent"].at("streetNumber").at("street").get<string>();
+                areacode = map_reesponse["regeocode"]["addressComponent"].at("adcode").get<string>();
+                citycode = map_reesponse["regeocode"]["addressComponent"].at("citycode").get<string>();
+                formatted_address = map_reesponse["regeocode"].at("formatted_address").get<string>();
 
 
                 LOG(INFO) << " city " << city;
@@ -256,73 +261,47 @@ public:
                 LOG(INFO) << " citycode " << citycode;
 
 
-            }else{
-                LOG(ERROR)<< " no map data ";
+            } else {
+                LOG(ERROR) << " no map data ";
             }
 
 
+        } else {
 
-        }else{
-
-            LOG(ERROR)<< " requests error response.status_code is  "<< response.status_code;
+            LOG(ERROR) << " requests error response.status_code is  " << response.status_code;
 
         }
 
 
-
-
-            cpr::Payload home_data{
-                {"answers",   answers},
-                {"latitude",  latitude},
-                {"longitude", longitude},
-                {"country",   country},
-                {"city",      city},
-                {"district",  district},
-                {"province",  province},
-                {"township",  township},
-                {"street",    street},
-                {"areacode", areacode},
-                {"towncode", towncode},
-                {"citycode",citycode},
+        cpr::Payload home_data{
+                {"answers",         answers},
+                {"latitude",        latitude},
+                {"longitude",       longitude},
+                {"country",         country},
+                {"city",            city},
+                {"district",        district},
+                {"province",        province},
+                {"township",        township},
+                {"street",          street},
+                {"areacode",        areacode},
+                {"towncode",        towncode},
+                {"citycode",        citycode},
                 {"timestampHeader", to_string(getCurrentLocalTimeStamp())}
         };
         return home_data;
 
 
-
-
-
-
-
-
-
-
     }
-
-
-
-
-
 
 
     void start() {
 
 
-        this->load_session();
-        if (this->dk()) {
-            // success
-            if (isSMS) {
+        this->login();
+        this->dk();
+        if (isSMS) {
 
-                this->send_sms();
-            }
-        } else {
-            this->login();
-            this->dk();
-            if (isSMS) {
-
-                this->send_sms();
-            }
-
+            this->send_sms();
         }
 
 
@@ -362,7 +341,7 @@ public:
 
     int dk() {
 
-        vector <string> c_number{"36.4", "36.5", "36.6", "36.7"};
+        vector<string> c_number{"36.4", "36.5", "36.6", "36.7"};
         uniform_int_distribution<unsigned> u(0, c_number.size() - 1);
         default_random_engine e;
 
@@ -406,7 +385,7 @@ public:
                 this->msg_dict = json::object(
                         {
                                 {"code", {
-                                        {"message", "打卡失败  "+json::parse(response.text).at("message").get<string>()},
+                                        {"message", "打卡失败  " + json::parse(response.text).at("message").get<string>()},
                                         {"address", formatted_address},
                                         {"time", do_string::trim(string(ctime(&now)))}
                                 }
@@ -458,27 +437,8 @@ public:
     }
 
 
-    void load_session() {
-        if (exist("cookie_json/" + name + ".json")) {
-            ifstream session("cookie_json/" + name + ".json");
-            json session_json;
-            session >> session_json;
-            this->JWSESSION = session_json["JWSESSION"].get<string>();
-        } else {
-            LOG(INFO) << " log in init ";
-            this->login();
-        }
-
-    }
-
-
-
-
-
-
-
 private:
-    json & configData;
+    json &configData;
     string name;
     string username;
     string password;
@@ -489,7 +449,7 @@ private:
     string accessKeySecret;
     string GDKey;
     bool isSMS;
-    string  formatted_address{};
+    string formatted_address{};
 
 
 };
@@ -509,7 +469,7 @@ int main(int argc, char *argv[]) {
     bool isSMS = false;
 
     for (int i = 0; i < people_json["names"].size(); ++i) {
-        WZXY wzxy(people_json["names"][i],accessKeyId, accessKeySecret, isSMS,GDKey);
+        WZXY wzxy(people_json["names"][i], accessKeyId, accessKeySecret, isSMS, GDKey);
         wzxy.start();
 
     }
