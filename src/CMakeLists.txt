@@ -14,7 +14,7 @@ target_link_libraries(go_wzxy cpr alibabacloud-sdk-core glog::glog)
 
 
 
-install(DIRECTORY cookie_json DESTINATION ${PROJECT_SOURCE_DIR}/build/bin )
+#install(DIRECTORY cookie_json DESTINATION ${PROJECT_SOURCE_DIR}/build/bin )
 install(PROGRAMS wzxy.sh DESTINATION ${PROJECT_SOURCE_DIR}/build/bin  )
 install(FILES config.json DESTINATION ${PROJECT_SOURCE_DIR}/build/bin PERMISSIONS OWNER_READ )
 
